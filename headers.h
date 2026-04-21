@@ -3,65 +3,65 @@
 #include<string>
 
 namespace dHeader{
-    class comment;
+    class Comment;
     class Memory;
-    class page ;
-    class post; // forward declaration 
-    class date {
+    class Page ;
+    class Post; // forward declaration 
+    class Date {
         int month , day , year ;
     public : 
-        date(){}
-        date (int day, int month , int year);
-        bool within24Hours(date other);
+        Date(){}
+        Date (int day, int month , int year);
+        bool within24Hours(Date other);
     };
 
-    class user{
+    class User{
         std :: string ID ;
         std :: string name ;
-        user** friends ;
-        page** likedPages ;
-        post** myPosts;
+        User** friends ;
+        Page** likedPages ;
+        Post** myPosts;
         int friendCount;
-        int postCount;
+        int PostCount;
         int likedPagesCount;
     public : 
-        user(std::string id="n/a",std::string name="n/a");
-        ~user() ;
+        User(std::string id="n/a",std::string name="n/a");
+        ~User() ;
         std::string getID();
         std::string getName();
-        void addFriend(user* u);
-        void removeFriend(user*u);
-        void addLikedPage(page* p);
-        void addPost(post* p);
-        user** getFriends();
-        page** getLikedPages();
-        post** getMyPosts();
+        void addFriend(User* u);
+        void removeFriend(User*u);
+        void addLikedPage(Page* p);
+        void addPost(Post* p);
+        User** getFriends();
+        Page** getLikedPages();
+        Post** getMyPosts();
         int getFriendCount();
         int getLikedPagesCount();
         int getPostCount();
     };
 
-    class post {
+    class Post {
         std :: string ID ;
         std :: string description ;
-        date shareDate ;
-        user ** usersThatLiked ;// max 10.  //if user had been deleted, it should be reduced from here
-        comment **comments ;//max 10
+        Date shareDate ;
+        User ** UsersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
+        Comment **Comments ;//max 10
         int likedCount ;
-        int commentCount ; 
+        int CommentCount ; 
     public :
-        post(std::string id, std::string desc, date d);
-        ~post() ;
-        void addLike(user* u);
-        void seeLiked() ; // list of people who have liked the post 
-        void addComment(comment* c) ;
+        Post(std::string id, std::string desc, Date d);
+        ~Post() ;
+        void addLike(User* u);
+        void seeLiked() ; // list of people who have liked the Post 
+        void addComment(Comment* c) ;
         void view(); 
         std :: string getID() ;
         std :: string getDesc() ;
-        date getDate() ;
+        Date getDate() ;
     };
 
-    class Activity : public post{
+    class Activity : public Post{
         int type ;
         std::string value ;
     public : 
@@ -69,47 +69,47 @@ namespace dHeader{
         Activity(int type, std::string value);
         ~Activity() ;
         void displayOptions();
-        void setTypeAndValue(int type, std :: string value) ; // sets the value given by the user and the type corresponding to the index in the table 
+        void setTypeAndValue(int type, std :: string value) ; // sets the value given by the User and the type corresponding to the index in the table 
     };
 
-    class page {
+    class Page {
         std :: string ID ;
         std:: string title;
-        post** posts;
+        Post** Posts;
         //Memory **memories;
-        user* owner;
+        User* owner;
         int totalLiked;
-        int postCount;
-        int memoryCount;
+        int PostCount;
+        int MemoryCount;
     public : 
-        page(std::string id,std::string title,user* owner);
-        ~page();
-        void addPost(post* p);
-        void view() ; // displays all its posts 
+        Page(std::string id,std::string title,User* owner);
+        ~Page();
+        void addPost(Post* p);
+        void view() ; // displays all its Posts 
         std::string getID();
         std::string getTitle();
-        post** getPosts();
+        Post** getPosts();
         int getPostCount();     
     };
 
-    class comment{
-        user* commenterUser;
-        page* commenterPage;
+    class Comment{
+        User* CommenterUser;
+        Page* CommenterPage;
         std :: string text ;
     public :
-        comment (user *commenter , std :: string text);
-        ~comment ();
+        Comment (User *Commenter , std :: string text);
+        ~Comment ();
         std::string getText();
-        user* getCommenterUser();
-        page* getCommenterPage();
+        User* getCommenterUser();
+        Page* getCommenterPage();
         void view();
     };
 
-    class Memory : public post{
-        post *original;
+    class Memory : public Post{
+        Post *original;
         std :: string text ;
     public : 
-        Memory(post *original, std :: string text, date d) ;
+        Memory(Post *original, std :: string text, Date d) ;
         ~Memory();
         void display();
     };
