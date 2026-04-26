@@ -15,7 +15,7 @@ namespace dHeader{
         bool within24Hours(Date other);
     };
 
-    class User{
+    class User {
         std :: string ID ;
         std :: string name ;
         User** friends ;
@@ -24,15 +24,21 @@ namespace dHeader{
         int friendCount;
         int PostCount;
         int likedPagesCount;
-    public : 
-        User(std::string id="n/a",std::string name="n/a");
+    public :   
+        User(std::string id,std::string name);
+        User() ;
+        User (const User& obj) ;
         ~User() ;
+        User& operator= (const User &obj); 
         std::string getID();
         std::string getName();
         void addFriend(User* u);
         void removeFriend(User*u);
         void addLikedPage(Page* p);
+        void removeLikedPage(Page* p) ;
         void addPost(Post* p);
+        void removePost(Post* p) ;
+        void display() ;
         User** getFriends();
         Page** getLikedPages();
         Post** getMyPosts();
@@ -44,24 +50,29 @@ namespace dHeader{
     class Post {
         std :: string ID ;
         std :: string description ;
+        int postType ;    // 1 if the post is a normal post 2 if its an activity 
+        User* owner ;
         Date shareDate ;
         User ** UsersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
         Comment **Comments ;//max 10
         int likedCount ;
         int CommentCount ; 
     public :
-        Post(std::string id, std::string desc, Date d);
+        Post(std::string id, std::string desc, Date d,User *u) ; 
         ~Post() ;
+        Post& operator=(const Post &obj);
         void addLike(User* u);
+        void removeLike(User* u) ;
         void seeLiked() ; // list of people who have liked the Post 
         void addComment(Comment* c) ;
+        void removeComment(Comment *c);  
         void view(); 
         std :: string getID() ;
         std :: string getDesc() ;
         Date getDate() ;
     };
 
-    class Activity : public Post{
+    class Activity : public Post {
         int type ;
         std::string value ;
     public : 
@@ -84,8 +95,9 @@ namespace dHeader{
     public : 
         Page(std::string id,std::string title,User* owner);
         ~Page();
+        Page& operator=(const Page& obj) ;
         void addPost(Post* p);
-        void view() ; // displays all its Posts 
+        void removePost(Post *p);
         std::string getID();
         std::string getTitle();
         Post** getPosts();
