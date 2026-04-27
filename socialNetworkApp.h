@@ -23,7 +23,7 @@ class socialNetworkApp{
     void viewFriendList() ;
     void viewPage() ;
     // all these functions will ask for the parameters first after they are called 
-    // this is done to avoid doing much work in the main and maintain the readability of the code 
-    
+    // this is done to avoid doing much work in the main/run and maintain the readability of the code 
+    void run() ;
 };
 }
