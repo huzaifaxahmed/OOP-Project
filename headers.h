@@ -8,14 +8,17 @@ namespace dHeader{
     class Page ;
     class Post; // forward declaration 
     class Date {
+    protected:
         int month , day , year ;
     public : 
         Date(){}
         Date (int day, int month , int year);
         bool within24Hours(Date other);
+        void display();
+        int yearsAgo(Date other);
     };
 
-    class User{
+    class User {
         std :: string ID ;
         std :: string name ;
         User** friends ;
@@ -24,15 +27,21 @@ namespace dHeader{
         int friendCount;
         int PostCount;
         int likedPagesCount;
-    public : 
-        User(std::string id="n/a",std::string name="n/a");
+    public :   
+        User(std::string id,std::string name);
+        User() ;
+        User (const User& obj) ;
         ~User() ;
+        User& operator= (const User &obj); 
         std::string getID();
         std::string getName();
         void addFriend(User* u);
         void removeFriend(User*u);
         void addLikedPage(Page* p);
+        void removeLikedPage(Page* p) ;
         void addPost(Post* p);
+        void removePost(Post* p) ;
+        void display() ;
         User** getFriends();
         Page** getLikedPages();
         Post** getMyPosts();
@@ -42,39 +51,44 @@ namespace dHeader{
     };
 
     class Post {
+    protected:
         std :: string ID ;
         std :: string description ;
-        Date shareDate ;
-        Page** pagesThatLiked;
-        User ** usersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
-        User* ownerUser;
-        Page* ownerPage;
-        Comment **comments ;//max 10
+        int postType ;    // 1 if the post is a normal post 2 if its an activity 
+        int pageLikeCount ;
+        int commentCount ;
         int likedCount ;
-        int pageLikeCount;
-        int commentCount ; 
+        User* ownerUser ;
+        Page *ownerPage ;
+        Date shareDate ;
+        User ** usersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
+        Page ** pagesThatLiked ;
+        Comment **comments ;//max 10
     public :
         Post();
-        Post(std::string id, std::string desc, Date d,User* u, Page* p);
-        ~Post();
-        void addLike(User* u);
+        Post(std::string id, std::string desc, Date d,User *u,Page *p) ; 
+        ~Post() ;
+        Post& operator=(const Post &obj);
         void addLike(Page* p);
+        void addLike(User* u);
+        void removeLike(User* u) ;
         void seeLiked() ; // list of people who have liked the Post 
         void addComment(Comment* c) ;
+        void removeComment(Comment *c);  
         void view(); 
         std :: string getID() ;
         std :: string getDesc() ;
         Date getDate() ;
     };
 
-    class Activity : public Post{
+    class Activity : public Post {
         int type ;
         std::string value ;
     public : 
         Activity();
-        Activity(int type, std::string value);
+        Activity(std::string id, std::string desc, Date d, User* u, Page* p, int type, std::string value);
         ~Activity() ;
-        void displayOptions();
+        void display();
         void setTypeAndValue(int type, std :: string value) ; // sets the value given by the User and the type corresponding to the index in the table 
     };
 
@@ -90,8 +104,9 @@ namespace dHeader{
     public : 
         Page(std::string id,std::string title,User* owner);
         ~Page();
+        Page& operator=(const Page& obj) ;
         void addPost(Post* p);
-        void view() ; // displays all its Posts 
+        void removePost(Post *p);
         std::string getID();
         std::string getTitle();
         Post** getPosts();
@@ -103,7 +118,7 @@ namespace dHeader{
         Page* CommenterPage;
         std :: string text ;
     public :
-        Comment (User *u ,Page *p, std :: string text);
+        Comment (User *u,Page* p , std :: string text);
         ~Comment ();
         std::string getText();
         User* getCommenterUser();
@@ -115,9 +130,9 @@ namespace dHeader{
         Post *original;
         std :: string text ;
     public : 
-        Memory(Post *original, std :: string text, Date d) ;
+        Memory(std::string id, std::string desc, Date d, User* u, Page* p, Post* original);
         ~Memory();
-        void display();
+        void display(Date currentDate);
     };
 
     class socialNetworkApp{

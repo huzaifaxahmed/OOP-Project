@@ -34,3 +34,9 @@ bool Date::within24Hours(Date other){
     }
     return false;
 }
+void Date::display(){
+    std::cout << day << "/" << month << "/" << year;
+}
+int Date::yearsAgo(Date other){
+    return other.year - this->year;
+}

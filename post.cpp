@@ -62,7 +62,27 @@ void Post::seeLiked() {
     }
 }
 void Post::addComment(Comment* c) {
-
+    int idx = -1 ;
+    if(commentCount >= 10){
+        std :: cout << "Max limit reached \n" ;
+        return ;
+    }
+    for(int i = 0 ; i < commentCount ;i++){
+        if(comments[i] == c){
+            std :: cout << "This comment is already under this post \n" ;
+            return ;
+        }
+    }
+    Comment** temp = new Comment*[commentCount + 1];
+    for(int i = 0 ; i < commentCount ; i++){
+        temp[i] = comments[i];
+    }
+    temp[commentCount] = c ;
+    delete [] comments ;
+    comments = temp ;
+    temp = nullptr ;
+    commentCount++ ;
+    std :: cout << "Comment added successfully \n" ;
 }
 void Post::view(){
 
