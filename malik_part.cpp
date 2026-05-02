@@ -223,35 +223,42 @@ namespace dHeader{
 
     // functions of the class post 
 
-    Post :: Post (std :: string id , std:: string desc, Date d ,User *u) {
-        owner = new User(*u);
-        ID = id;
-        description = desc ;
-        shareDate = d ; 
-    }
-    void Post :: addLike(User *u){
-        int idx = -1 ;
-        for(int i = 0 ; i < likedCount ;i++){
-            if(UsersThatLiked[i] == u){
-                std :: cout << "User has already liked this post \n" ;
-                return ;
-            }
+Post::Post(std::string id, std::string desc, Date d, User* u, Page* p){
+    ID=id;
+    description=desc;
+    shareDate=d;
+    ownerUser=u;
+    ownerPage=p;
+    usersThatLiked=nullptr;
+    pagesThatLiked=nullptr;
+    likedCount=0;
+    commentCount=0;
+    pageLikeCount=0;
+    comments  =nullptr;
+}
+    void Post::addLike(Page* p){
+    int idx = -1 ;
+    for(int i = 0 ; i < pageLikeCount ;i++){
+        if(pagesThatLiked[i] == p){
+            std :: cout << "Page has already liked this post \n" ;
+            return ;
         }
-        User** temp = new User*[likedCount + 1];
-        for(int i = 0 ; i < likedCount ; i++){
-                temp[i] = UsersThatLiked[i] ;
-        }
-        temp[likedCount] = u ;
-        delete[] UsersThatLiked ;
-        UsersThatLiked = temp ;
-        temp = nullptr ;
-        likedCount++ ;
-        std :: cout << "User like this post succssfully !\n" ;
     }
+    Page** temp = new Page*[pageLikeCount + 1];
+    for(int i = 0 ; i < pageLikeCount ; i++){
+        temp[i] = pagesThatLiked[i] ;
+    }
+    temp[pageLikeCount] = p;
+    delete[] pagesThatLiked ;
+    pagesThatLiked = temp ;
+    temp = nullptr ;
+    pageLikeCount++ ;
+    std :: cout << "Page liked this post succssfully !\n" ;
+}
     void Post :: removeLike(User* u){
         int idx = -1 ;
         for(int i = 0 ; i < likedCount ; i++){
-            if(UsersThatLiked[i] == u){
+            if(usersThatLiked[i] == u){
                 idx = i ;
                 break ;
             }
@@ -263,48 +270,48 @@ namespace dHeader{
         User** temp = new User*[likedCount - 1] ;
         for(int i = 0 , j = 0 ; j < likedCount ; j++){
             if(j != idx){
-                temp[i++] = UsersThatLiked[j] ;
+                temp[i++] = usersThatLiked[j] ;
             }
         }
-        delete[] UsersThatLiked ; 
-        UsersThatLiked = temp ;
+        delete[] usersThatLiked ; 
+        usersThatLiked = temp ;
         temp = nullptr ;
         likedCount-- ;
     }
     void Post :: seeLiked(){
         for(int i = 0 ; i < likedCount ; i++){
-            UsersThatLiked[i]->display() ;
+            usersThatLiked[i]->display() ;
             std :: cout << std :: endl ;
         }
     }
     void Post :: addComment(Comment* c){
         int idx = -1 ;
-        if(CommentCount >= 10){
+        if(commentCount >= 10){
             std :: cout << "Max limit reached \n" ;
             return ;
         }
-        for(int i = 0 ; i < CommentCount ;i++){
-                if(Comments[i] == c){
+        for(int i = 0 ; i < commentCount ;i++){
+                if(comments  [i] == c){
                     std :: cout << "This comment is already under this post \n" ;
                     return ;
                 }
         }
-        Comment** temp = new Comment*[CommentCount + 1];
-        for(int i = 0 ; i < CommentCount ; i++){
-            temp[i] = Comments[i];
+        Comment** temp = new Comment*[commentCount + 1];
+        for(int i = 0 ; i < commentCount ; i++){
+            temp[i] = comments[i];
         }
-        temp[CommentCount] = c ;
-        delete [] Comments ;
-        Comments = temp ;
+        temp[commentCount] = c ;
+        delete [] comments ;
+        comments     = temp ;
         temp = nullptr ;
-        CommentCount++ ;
+        commentCount++ ;
         std :: cout << "Comment added successfully \n" ;
     }
 
     void Post :: removeComment(Comment *c){
         int idx = -1 ;
-        for(int i = 0 ; i < CommentCount ;i++){
-            if(Comments[i] == c){
+        for(int i = 0 ; i < commentCount ;i++){
+            if(comments   [i] == c){
                 idx = i ;
                 break ;
             }
@@ -313,26 +320,29 @@ namespace dHeader{
             std :: cout << "The given comment is not under this post \n" ;
             return ;
         }
-        Comment** temp = new Comment*[CommentCount - 1];
-        for(int i = 0 , j = 0; i < CommentCount ;i++){
+        Comment** temp = new Comment*[commentCount - 1];
+        for(int i = 0 , j = 0; i < commentCount ;i++){
             if(idx != i)
-            temp[j++] = Comments[i] ;
+            temp[j++] = comments   [i] ;
         }
-        delete [] Comments ;
-        Comments = temp ;
+        delete [] comments ;
+        comments  = temp ;
         temp = nullptr ;
-        CommentCount-- ;
+        commentCount-- ;
     }
 
     void Post :: view(){
-        std :: cout <<"--"<< owner->getName () << " shared : " << description << std :: endl ;
+        if(ownerPage == nullptr)
+        std :: cout <<"--"<< ownerUser->getName () << " shared : " << description << std :: endl ;
+        else 
+        std :: cout <<"--"<< ownerPage->getTitle () << " shared : " << description << std :: endl ;        
     }
     std :: string Post :: getID(){return ID ;}
     std :: string Post :: getDesc(){return description ;}
     Date Post :: getDate(){return shareDate ;} 
     Post :: ~Post (){
-        delete[]  Comments ;
-        delete[] UsersThatLiked ; 
+        delete[]  comments ;
+        delete[] usersThatLiked ; 
     }
     
     // functions of the class page 
