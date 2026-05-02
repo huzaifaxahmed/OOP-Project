@@ -54,22 +54,13 @@ namespace dHeader{
     protected:
         std :: string ID ;
         std :: string description ;
-        int postType ;    // 1 if the post is a normal post 2 if its an activity 
-        int pageLikeCount ;
-        int commentCount ;
-        int likedCount ;
-        User* ownerUser ;
-        Page *ownerPage ;
         Date shareDate ;
         User ** usersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
         Page ** pagesThatLiked ;
         Comment **comments ;//max 10
     public :
-        Post();
-        Post(std::string id, std::string desc, Date d,User *u,Page *p) ; 
+        Post(std::string id, std::string desc, Date d);
         ~Post() ;
-        Post& operator=(const Post &obj);
-        void addLike(Page* p);
         void addLike(User* u);
         void removeLike(User* u) ;
         void seeLiked() ; // list of people who have liked the Post 
