@@ -45,14 +45,20 @@ namespace dHeader{
         std :: string ID ;
         std :: string description ;
         Date shareDate ;
-        User ** UsersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
-        Comment **Comments ;//max 10
+        Page** pagesThatLiked;
+        User ** usersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
+        User* ownerUser;
+        Page* ownerPage;
+        Comment **comments ;//max 10
         int likedCount ;
-        int CommentCount ; 
+        int pageLikeCount;
+        int commentCount ; 
     public :
-        Post(std::string id, std::string desc, Date d);
-        ~Post() ;
+        Post();
+        Post(std::string id, std::string desc, Date d,User* u, Page* p);
+        ~Post();
         void addLike(User* u);
+        void addLike(Page* p);
         void seeLiked() ; // list of people who have liked the Post 
         void addComment(Comment* c) ;
         void view(); 
@@ -97,7 +103,7 @@ namespace dHeader{
         Page* CommenterPage;
         std :: string text ;
     public :
-        Comment (User *Commenter , std :: string text);
+        Comment (User *u ,Page *p, std :: string text);
         ~Comment ();
         std::string getText();
         User* getCommenterUser();
