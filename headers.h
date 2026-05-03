@@ -58,10 +58,16 @@ namespace dHeader{
         User ** usersThatLiked ;// max 10.  //if User had been deleted, it should be reduced from here
         Page ** pagesThatLiked ;
         Comment **comments ;//max 10
+        User* ownerUser;
+        Page* ownerPage;
+        int likedCount;
+        int pageLikeCount;
+        int commentCount;
     public :
-        Post(std::string id, std::string desc, Date d);
+        Post(std::string id, std::string desc, Date d, User* u, Page* p);
         ~Post() ;
         void addLike(User* u);
+        void addLike(Page* p);
         void removeLike(User* u) ;
         void seeLiked() ; // list of people who have liked the Post 
         void addComment(Comment* c) ;
