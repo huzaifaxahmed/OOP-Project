@@ -16,8 +16,11 @@ namespace dHeader
         socialNetworkApp();
         ~socialNetworkApp();
         void setCurrentUser();
-        void readData(std ::istream &file);
+        void readUser(std ::istream &file);
         void readPages(std::istream &file);
+        void readPosts(std::istream &file);
+        void readComments(std::istream &file);
+        void readData();
         void viewHome();
         void likeAPost();
         void likedPeopleList(); // displays the list of people who have liked a post

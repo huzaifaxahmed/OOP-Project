@@ -15,7 +15,7 @@ namespace dHeader
         likedPages = nullptr;
         myPosts = nullptr;
         likedPagesCount = 0;
-        PostCount = 0;
+        postCount = 0;
         friendCount = 0;
     }
 
@@ -28,7 +28,7 @@ namespace dHeader
 
         friendCount = obj.friendCount;
         likedPagesCount = obj.likedPagesCount;
-        PostCount = obj.PostCount;
+        postCount = obj.postCount;
         // the main concept is making a new array of single pointers and then copying address value by value
         // so that if one array gets deleted somewhere it does not affect the other
         if (friends != nullptr)
@@ -48,8 +48,8 @@ namespace dHeader
         if (myPosts != nullptr)
             delete[] myPosts;
 
-        myPosts = new Post *[PostCount];
-        for (int i = 0; i < PostCount; i++)
+        myPosts = new Post *[postCount];
+        for (int i = 0; i < postCount; i++)
             myPosts[i] = obj.myPosts[i];
 
         return *this;
@@ -62,7 +62,7 @@ namespace dHeader
 
         friendCount = obj.friendCount;
         likedPagesCount = obj.likedPagesCount;
-        PostCount = obj.PostCount;
+        postCount = obj.postCount;
         // the main concept is making a new array of single pointers and then copying address value by value
         // so that if one array gets deleted somewhere it does not affect the other
 
@@ -74,8 +74,8 @@ namespace dHeader
         for (int i = 0; i < likedPagesCount; i++)
             likedPages[i] = obj.likedPages[i];
 
-        myPosts = new Post *[PostCount];
-        for (int i = 0; i < PostCount; i++)
+        myPosts = new Post *[postCount];
+        for (int i = 0; i < postCount; i++)
             myPosts[i] = obj.myPosts[i];
     }
     std ::string User::getName() { return name; }
@@ -190,7 +190,7 @@ namespace dHeader
     }
     void User ::addPost(Post *p)
     {
-        for (int i = 0; i < PostCount; i++)
+        for (int i = 0; i < postCount; i++)
         {
             if (myPosts[i] == p)
             {
@@ -198,22 +198,22 @@ namespace dHeader
                 return;
             }
         }
-        Post **temp = new Post *[PostCount + 1];
-        for (int i = 0; i < PostCount; i++)
+        Post **temp = new Post *[postCount + 1];
+        for (int i = 0; i < postCount; i++)
         {
             temp[i] = myPosts[i];
         }
-        temp[PostCount] = p;
+        temp[postCount] = p;
         delete[] myPosts;
         myPosts = temp;
         temp = nullptr;
-        PostCount++;
+        postCount++;
         std ::cout << "Post added successfully \n ";
     }
     void User ::removePost(Post *p)
     {
         int idx = -1;
-        for (int i = 0; i < PostCount; i++)
+        for (int i = 0; i < postCount; i++)
         {
             if (myPosts[i] == p)
             {
@@ -226,8 +226,8 @@ namespace dHeader
             std ::cout << "Page is already not liked .. ";
             return;
         }
-        Post **temp = new Post *[PostCount - 1];
-        for (int i = 0, j = 0; j < PostCount; j++)
+        Post **temp = new Post *[postCount - 1];
+        for (int i = 0, j = 0; j < postCount; j++)
         {
             if (j != idx)
                 temp[i++] = myPosts[j];
@@ -235,7 +235,7 @@ namespace dHeader
         delete[] myPosts;
         myPosts = temp;
         temp = nullptr;
-        PostCount--;
+        postCount--;
         std ::cout << "Post removed... " << std ::endl;
     }
     void User ::display()
@@ -254,7 +254,7 @@ namespace dHeader
     Post **User ::getMyPosts() { return myPosts; }
     int User ::getFriendCount() { return friendCount; }
     int User ::getLikedPagesCount() { return likedPagesCount; }
-    int User ::getPostCount() { return PostCount; }
+    int User ::getPostCount() { return postCount; }
 
     // functions of the class post
 
@@ -409,12 +409,12 @@ namespace dHeader
 
     std ::string Page ::getTitle() { return title; }
     std ::string Page ::getID() { return ID; }
-    int Page ::getPostCount() { return PostCount; }
+    int Page ::getPostCount() { return postCount; }
     Post **Page ::getPosts() { return Posts; }
     void Page ::addPost(Post *p)
     {
         // first check if the post is already in the posts array or not
-        for (int i = 0; i < PostCount; i++)
+        for (int i = 0; i < postCount; i++)
         {
             if (Posts[i] == p)
             {
@@ -422,23 +422,23 @@ namespace dHeader
                 return;
             }
         }
-        Post **temp = new Post *[PostCount + 1];
-        for (int i = 0; i < PostCount; i++)
+        Post **temp = new Post *[postCount + 1];
+        for (int i = 0; i < postCount; i++)
         {
             temp[i] = Posts[i];
         }
-        temp[PostCount] = p;
+        temp[postCount] = p;
         delete[] Posts;
         Posts = temp;
         temp = nullptr;
-        PostCount++;
+        postCount++;
         std ::cout << "Post successfully added \n";
     }
     void Page ::removePost(Post *p)
     {
         // first if the post even exists on the page
         int idx = -1;
-        for (int i = 0; i < PostCount; i++)
+        for (int i = 0; i < postCount; i++)
         {
             if (Posts[i] == p)
             {
@@ -451,8 +451,8 @@ namespace dHeader
             std ::cout << "Invaid post ";
             return;
         }
-        Post **temp = new Post *[PostCount - 1];
-        for (int i = 0, j = 0; i < PostCount; i++)
+        Post **temp = new Post *[postCount - 1];
+        for (int i = 0, j = 0; i < postCount; i++)
         {
             if (i != idx)
             {
@@ -461,7 +461,7 @@ namespace dHeader
         }
         delete[] Posts;
         Posts = temp;
-        PostCount--;
+        postCount--;
         std ::cout << "Post removed !\n";
     }
 

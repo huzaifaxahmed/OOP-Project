@@ -28,6 +28,8 @@ namespace dHeader
         }
         currentUser = users[idx]; // copies the address of the user (composition)
     }
+
+
     User *socialNetworkApp ::getUserByID(std ::string ID)
     {
         for (int i = 0; i < userCount; i++)
@@ -37,9 +39,27 @@ namespace dHeader
         }
         return nullptr;
     }
+
+
     Page *socialNetworkApp::getPageByID(std::string ID)
     {
+        for (int i=0;i<pagesCount;i++){
+            if(pages[i]->getID() == ID)
+                return pages[i];
+        }
+        return nullptr;
     }
+
+
+    Post* socialNetworkApp::getPostByID(std::string id){
+    for(int i = 0; i < postCount; i++){
+        if(posts[i]->getID() == id)
+            return posts[i];
+    }
+    return nullptr;
+    }
+
+
     void socialNetworkApp::readPages(std::istream &file)
     {
         int count;
@@ -56,7 +76,9 @@ namespace dHeader
             pages[i] = new Page(id, title, nullptr);
         }
     }
-    void socialNetworkApp ::readData(std ::istream &file)
+
+
+    void socialNetworkApp ::readUser(std ::istream &file)
     {
         std ::string *userNames;
         std::string *userID;
@@ -118,7 +140,21 @@ namespace dHeader
         delete[] friends;
         delete[] pages;
     }
+    void socialNetworkApp::readPosts(std::istream &file){
+    int count;
+    file >> count;
+    postCount = count;
+    posts = new Post*[count];
+    
+    for(int i = 0; i < count; i++){
+        int postType;
+        std::string postID;
+        file >> postType >> postID;
 
+    }
+
+
+    
 }
 int main()
 {

@@ -29,7 +29,7 @@ namespace dHeader
         Page **likedPages;
         Post **myPosts;
         int friendCount;
-        int PostCount;
+        int postCount;
         int likedPagesCount;
 
     public:
@@ -106,7 +106,7 @@ namespace dHeader
         // Memory **memories;
         User *owner;
         int totalLiked;
-        int PostCount;
+        int postCount;
         // int MemoryCount;
 
     public:
