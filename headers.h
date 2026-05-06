@@ -104,13 +104,12 @@ namespace dHeader
         std::string title;
         Post **Posts;
         // Memory **memories;
-        User *owner;
         int totalLiked;
         int postCount;
         // int MemoryCount;
 
     public:
-        Page(std::string id, std::string title, User *owner);
+        Page(std::string id, std::string title);
         ~Page();
         Page &operator=(const Page &obj);
         void addPost(Post *p);

@@ -406,7 +406,10 @@ namespace dHeader
     }
 
     // functions of the class page
-
+    Page :: Page (std :: string ID , std :: string title){
+        this->ID = ID ;
+        this->title  = title ;
+    }
     std ::string Page ::getTitle() { return title; }
     std ::string Page ::getID() { return ID; }
     int Page ::getPostCount() { return postCount; }

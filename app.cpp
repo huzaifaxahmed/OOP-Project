@@ -73,7 +73,7 @@ namespace dHeader
             getline(file, title);
             if (!title.empty() && title[0] == ' ')
                 title.erase(0, 1);
-            pages[i] = new Page(id, title, nullptr);
+            pages[i] = new Page(id, title);
         }
     }
 
@@ -141,21 +141,18 @@ namespace dHeader
         delete[] pages;
     }
     void socialNetworkApp::readPosts(std::istream &file){
-    int count;
-    file >> count;
-    postCount = count;
-    posts = new Post*[count];
+    std :: string reader;
+    file >> reader;
+    postCount = stoi(reader);
+    posts = new Post*[postCount];
     
-    for(int i = 0; i < count; i++){
+    for(int i = 0; i < postCount; i++){
         int postType;
         std::string postID;
         file >> postType >> postID;
 
     }
-
-
-    
+    }
 }
-int main()
-{
-}
+
+int main(){}
