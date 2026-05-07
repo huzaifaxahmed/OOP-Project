@@ -70,9 +70,7 @@ namespace dHeader
         {
             std::string id, title;
             file >> id;
-            getline(file, title);
-            if (!title.empty() && title[0] == ' ')
-                title.erase(0, 1);
+            std :: getline(file >> std :: ws, title);
             pages[i] = new Page(id, title);
         }
     }
@@ -90,8 +88,7 @@ namespace dHeader
         int pagesIdx = 0;
         std::string reader;
         std::string firstName, lastName;
-        file >> reader;
-        userCount = stoi(reader);
+        file >> userCount;
         users = new User *[userCount];
         userNames = new std ::string[userCount];
         userID = new std ::string[userCount];
@@ -135,24 +132,81 @@ namespace dHeader
                 ss >> temp;
             }
         }
+        for (int i = 0 ; i < userCount ; i++){
+            std :: stringstream ss (pages[i] = "-1") ;
+            std :: string temp ;
+            ss >> temp ;
+            while(temp != "-1"){
+                Page *tempPage = getPageByID(temp) ;
+                if(tempPage == nullptr)
+                    std :: cout << "No such page exists \n" ;
+                users[i]->addLikedPage(tempPage) ;
+                ss >> temp ;
+            }
+        }
         delete[] userNames;
         delete[] userID;
         delete[] friends;
         delete[] pages;
     }
     void socialNetworkApp::readPosts(std::istream &file){
-    std :: string reader;
-    file >> reader;
-    postCount = stoi(reader);
-    posts = new Post*[postCount];
+    file >> postCount ;
+    posts = new Post*[postCount];  
     
     for(int i = 0; i < postCount; i++){
         int postType;
         std::string postID;
-        file >> postType >> postID;
+        std :: string description;
+        std :: string owner ;
+        bool ownerType ;  // 1 if the owner is a user 0 if the owner is a page
+        int day , month , year ;
 
+        int activityType ; // only applicable if the post is an activity
+        std :: string activityDesc ;  // same as above
+
+        file >> postType >> postID;
+        file >> day >> month >> year ;
+
+        Date temp(day,month,year) ;
+
+        std :: getline(file >> std :: ws , description) ;
+
+        if(postType == 2) {
+            file >> activityType ;
+         std :: getline(file >> std :: ws, activityDesc) ;
+        }
+        file >> owner ;
+        ownerType = owner[0] == 'p' ? 0 : 1 ;
+        if(ownerType){
+            User* ownerUser = getUserByID(owner) ;
+            if(postType == 2)
+            posts[i] = new Activity(postID,description,temp,ownerUser,nullptr,activityType,activityDesc) ;
+            else 
+            posts[i] = new Post(postID,description,temp,ownerUser,nullptr) ;
+        }
+        else {
+            Page* ownerPage = getPageByID(owner) ;
+            if(postType == 2)
+            posts[i] = new Activity(postID,description,temp,nullptr,ownerPage,activityType,activityDesc) ;
+            else 
+            posts[i] = new Post(postID,description,temp,nullptr,ownerPage) ;           
+        }
+        // now reading users and pages which liked the post 
+        std :: string likers ;
+        file >> likers ;
+        while(likers != "-1"){
+            if(likers[0] == 'p' ){
+                Page* temp = getPageByID(likers) ;
+                posts[i]->addLike(temp);
+            }
+            else {
+                User* temp = getUserByID(likers) ;
+                posts[i]->addLike(temp) ;
+            }
+            file >> likers ;
+        }
     }
-    }
+  }
 }
 
 int main(){}
