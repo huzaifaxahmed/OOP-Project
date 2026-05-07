@@ -29,7 +29,6 @@ namespace dHeader
         currentUser = users[idx]; // copies the address of the user (composition)
     }
 
-
     User *socialNetworkApp ::getUserByID(std ::string ID)
     {
         for (int i = 0; i < userCount; i++)
@@ -40,25 +39,25 @@ namespace dHeader
         return nullptr;
     }
 
-
     Page *socialNetworkApp::getPageByID(std::string ID)
     {
-        for (int i=0;i<pagesCount;i++){
-            if(pages[i]->getID() == ID)
+        for (int i = 0; i < pagesCount; i++)
+        {
+            if (pages[i]->getID() == ID)
                 return pages[i];
         }
         return nullptr;
     }
 
-
-    Post* socialNetworkApp::getPostByID(std::string id){
-    for(int i = 0; i < postCount; i++){
-        if(posts[i]->getID() == id)
-            return posts[i];
+    Post *socialNetworkApp::getPostByID(std::string id)
+    {
+        for (int i = 0; i < postCount; i++)
+        {
+            if (posts[i]->getID() == id)
+                return posts[i];
+        }
+        return nullptr;
     }
-    return nullptr;
-    }
-
 
     void socialNetworkApp::readPages(std::istream &file)
     {
@@ -70,11 +69,10 @@ namespace dHeader
         {
             std::string id, title;
             file >> id;
-            std :: getline(file >> std :: ws, title);
+            std ::getline(file >> std ::ws, title);
             pages[i] = new Page(id, title);
         }
     }
-
 
     void socialNetworkApp ::readUser(std ::istream &file)
     {
@@ -116,6 +114,7 @@ namespace dHeader
             }
             nameIdx++, idIdx++, pagesIdx++, friendIdx++;
         }
+        // addfriend
         for (int i = 0; i < userCount; i++)
         {
             std ::stringstream ss(friends[i] + " -1");
@@ -127,21 +126,26 @@ namespace dHeader
                 if (tempUser == nullptr)
                 {
                     std ::cout << "no such user exists \n";
+                    continue;
                 }
                 users[i]->addFriend(tempUser);
                 ss >> temp;
             }
         }
-        for (int i = 0 ; i < userCount ; i++){
-            std :: stringstream ss (pages[i] = "-1") ;
-            std :: string temp ;
-            ss >> temp ;
-            while(temp != "-1"){
-                Page *tempPage = getPageByID(temp) ;
-                if(tempPage == nullptr)
-                    std :: cout << "No such page exists \n" ;
-                users[i]->addLikedPage(tempPage) ;
-                ss >> temp ;
+        // addlikedpage
+        for (int i = 0; i < userCount; i++)
+        {
+            std ::stringstream ss(pages[i] + " -1");
+            std ::string temp;
+            ss >> temp;
+            while (temp != "-1")
+            {
+                Page *tempPage = getPageByID(temp);
+                if (tempPage == nullptr)
+                    std ::cout << "No such page exists \n";
+                continue;
+                users[i]->addLikedPage(tempPage);
+                ss >> temp;
             }
         }
         delete[] userNames;
@@ -149,64 +153,82 @@ namespace dHeader
         delete[] friends;
         delete[] pages;
     }
-    void socialNetworkApp::readPosts(std::istream &file){
-    file >> postCount ;
-    posts = new Post*[postCount];  
-    
-    for(int i = 0; i < postCount; i++){
-        int postType;
-        std::string postID;
-        std :: string description;
-        std :: string owner ;
-        bool ownerType ;  // 1 if the owner is a user 0 if the owner is a page
-        int day , month , year ;
+    void socialNetworkApp::readPosts(std::istream &file)
+    {
+        file >> postCount;
+        posts = new Post *[postCount];
 
-        int activityType ; // only applicable if the post is an activity
-        std :: string activityDesc ;  // same as above
+        for (int i = 0; i < postCount; i++)
+        {
+            int postType;
+            std::string postID;
+            std ::string description;
+            std ::string owner;
+            bool ownerType; // 1 if the owner is a user 0 if the owner is a page
+            int day, month, year;
 
-        file >> postType >> postID;
-        file >> day >> month >> year ;
+            int activityType;          // only applicable if the post is an activity
+            std ::string activityDesc; // same as above
 
-        Date temp(day,month,year) ;
+            file >> postType >> postID;
+            file >> day >> month >> year;
 
-        std :: getline(file >> std :: ws , description) ;
+            Date temp(day, month, year);
 
-        if(postType == 2) {
-            file >> activityType ;
-         std :: getline(file >> std :: ws, activityDesc) ;
-        }
-        file >> owner ;
-        ownerType = owner[0] == 'p' ? 0 : 1 ;
-        if(ownerType){
-            User* ownerUser = getUserByID(owner) ;
-            if(postType == 2)
-            posts[i] = new Activity(postID,description,temp,ownerUser,nullptr,activityType,activityDesc) ;
-            else 
-            posts[i] = new Post(postID,description,temp,ownerUser,nullptr) ;
-        }
-        else {
-            Page* ownerPage = getPageByID(owner) ;
-            if(postType == 2)
-            posts[i] = new Activity(postID,description,temp,nullptr,ownerPage,activityType,activityDesc) ;
-            else 
-            posts[i] = new Post(postID,description,temp,nullptr,ownerPage) ;           
-        }
-        // now reading users and pages which liked the post 
-        std :: string likers ;
-        file >> likers ;
-        while(likers != "-1"){
-            if(likers[0] == 'p' ){
-                Page* temp = getPageByID(likers) ;
-                posts[i]->addLike(temp);
+            std ::getline(file >> std ::ws, description);
+
+            if (postType == 2)
+            {
+                file >> activityType;
+                std ::getline(file >> std ::ws, activityDesc);
             }
-            else {
-                User* temp = getUserByID(likers) ;
-                posts[i]->addLike(temp) ;
+            file >> owner;
+            ownerType = owner[0] == 'p' ? 0 : 1;
+            if (ownerType)
+            {
+                User *ownerUser = getUserByID(owner);
+                if (ownerUser == nullptr)
+                {
+                    std ::cout << "Faulty owner no such user exits \n";
+                    continue;
+                }
+                if (postType == 2)
+                    posts[i] = new Activity(postID, description, temp, ownerUser, nullptr, activityType, activityDesc);
+                else
+                    posts[i] = new Post(postID, description, temp, ownerUser, nullptr);
             }
-            file >> likers ;
+            else
+            {
+                Page *ownerPage = getPageByID(owner);
+                if (ownerPage == nullptr)
+                {
+                    std ::cout << "Faulty owner no such user exits \n";
+                    continue;
+                }
+                if (postType == 2)
+                    posts[i] = new Activity(postID, description, temp, nullptr, ownerPage, activityType, activityDesc);
+                else
+                    posts[i] = new Post(postID, description, temp, nullptr, ownerPage);
+            }
+            // now reading users and pages which liked the post
+            std ::string likers;
+            file >> likers;
+            while (likers != "-1")
+            {
+                if (likers[0] == 'p')
+                {
+                    Page *temp = getPageByID(likers);
+                    posts[i]->addLike(temp);
+                }
+                else
+                {
+                    User *temp = getUserByID(likers);
+                    posts[i]->addLike(temp);
+                }
+                file >> likers;
+            }
         }
     }
-  }
 }
 
-int main(){}
+int main() {}
