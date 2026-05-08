@@ -288,29 +288,6 @@ namespace dHeader
         post->addComment(comment);
     }
 
-    }       
-    void socialNetworkApp ::  viewHome(){
-          std :: cout << currentUser->getName() << "-Home Page \n" ;
-        std :: cout << std :: setw(100) << "" << std :: setfill('-') << std :: setfill(' ') << "\n";
-        for(int i = 0 ; i < postCount ;i++){
-            posts[i]->display() ;
-        }
-    }
-    void socialNetworkApp :: viewProfile(){
-        std :: cout << currentUser->getName() << "-Time Line \n" ;
-        Post** tempPosts = currentUser->getMyPosts() ;
-        for(int i = 0 ; i < currentUser->getPostCount() ;i++){
-            tempPosts[i]->display(); 
-        }
-    }
-    void socialNetworkApp :: viewFriendList(){
-        std :: cout << currentUser->getName() << "-Friend List \n" ;
-        User** tempFriends = currentUser->getFriends() ;
-        for(int i = 0 ; i < currentUser->getFriendCount() ;i++){
-            std :: cout << "ID : " <<  tempFriends[i]->getID() << " Name : " << tempFriends[i]->getName() << std :: endl  ;
-        }
-    }
-
 }
 
 int main() {}

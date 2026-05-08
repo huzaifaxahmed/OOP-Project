@@ -86,14 +86,14 @@ void Post ::removeLike(User *u)
         likedCount--;
     }
 
-    void Post ::seeLiked()
+void Post ::seeLiked()
+{
+    for (int i = 0; i < likedCount; i++)
     {
-        for (int i = 0; i < likedCount; i++)
-        {
-            usersThatLiked[i]->display();
-            std ::cout << std ::endl;
-        }
+        usersThatLiked[i]->display();
+        std ::cout << std ::endl;
     }
+}
     
 void Post::addComment(Comment* c) {
     int idx = -1 ;
@@ -147,6 +147,7 @@ void Post ::removeComment(Comment *c)
         commentCount--;
     }
 
+<<<<<<< Updated upstream
 void Post ::display()
     {
         if (ownerPage == nullptr)
@@ -157,6 +158,15 @@ void Post ::display()
             comments[i]->view() ;
         }
     }
+=======
+void Post ::view()
+{
+    if (ownerPage == nullptr)
+        std ::cout << "--" << ownerUser->getName() << " shared : " << description << std ::endl;
+    else
+        std ::cout << "--" << ownerPage->getTitle() << " shared : " << description << std ::endl;
+}
+>>>>>>> Stashed changes
 std ::string Post ::getID() { return ID; }
 std ::string Post ::getDesc() { return description; }
 Date Post ::getDate() { return shareDate; }

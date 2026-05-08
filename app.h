@@ -27,6 +27,7 @@ namespace dHeader
         void commentOnAPost();
         void viewPost();
         void shareMemory();
+        void viewMemories();
         void viewProfile();
         void viewFriendList();
         void viewPage();

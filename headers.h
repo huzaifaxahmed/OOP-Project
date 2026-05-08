@@ -19,6 +19,7 @@ namespace dHeader
         bool within24Hours(Date other);
         void display();
         int yearsAgo(Date other);
+        bool isSameDay(Date other);
     };
 
     class User

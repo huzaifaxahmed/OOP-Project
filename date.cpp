@@ -46,3 +46,7 @@ int Date::yearsAgo(Date other)
 {
     return other.year - this->year;
 }
+
+bool Date::isSameDay(Date other){
+    return this->day == other.day && this->month == other.month && this->year != other.year;
+}
