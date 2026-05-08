@@ -118,6 +118,7 @@ namespace dHeader
         std::string getTitle();
         Post **getPosts();
         int getPostCount();
+        void display() ;
     };
 
     class Comment
@@ -138,11 +139,12 @@ namespace dHeader
     class Memory : public Post
     {
         Post *original;
+        Date currentDate;
 
     public:
         Memory(std::string id, std::string desc, Date d, User *u, Page *p, Post *original);
         ~Memory();
-        void display(Date currentDate);
+        void display() override;
     };
 
     class socialNetworkApp

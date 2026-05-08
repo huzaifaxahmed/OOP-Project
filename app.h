@@ -10,6 +10,7 @@ namespace dHeader
         Post **posts;
         User *currentUser;
         Date currentDate;
+        Memory **memories ;
         int userCount, pagesCount, postCount;
 
     public:
