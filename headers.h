@@ -72,14 +72,14 @@ namespace dHeader
 
     public:
         Post(std::string id, std::string desc, Date d, User *u, Page *p);
-        ~Post();
+        virtual ~Post();
         void addLike(User *u);
         void addLike(Page *p);
         void removeLike(User *u);
         void seeLiked(); // list of people who have liked the Post
         void addComment(Comment *c);
         void removeComment(Comment *c);
-        void view();
+        virtual void display();
         std ::string getID();
         std ::string getDesc();
         Date getDate();
@@ -93,8 +93,7 @@ namespace dHeader
     public:
         Activity();
         Activity(std::string id, std::string desc, Date d, User *u, Page *p, int type, std::string value);
-        ~Activity();
-        void display();
+        void display() override;
         void setTypeAndValue(int type, std ::string value); // sets the value given by the User and the type corresponding to the index in the table
     };
 

@@ -389,7 +389,7 @@ namespace dHeader
         commentCount--;
     }
 
-    void Post ::view()
+    void Post ::display()
     {
         if (ownerPage == nullptr)
             std ::cout << "--" << ownerUser->getName() << " shared : " << description << std ::endl;

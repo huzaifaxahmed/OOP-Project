@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include<iomanip>
 namespace dHeader
 {
     socialNetworkApp::socialNetworkApp(){
@@ -103,7 +104,7 @@ namespace dHeader
         std ::string *userNames;
         std::string *userID;
         std::string *friends;
-        std::string *pages;
+        std::string *pagesID;
         int nameIdx = 0;
         int idIdx = 0;
         int friendIdx = 0;
@@ -115,7 +116,7 @@ namespace dHeader
         userNames = new std ::string[userCount];
         userID = new std ::string[userCount];
         friends = new std ::string[userCount];
-        pages = new std ::string[userCount];
+        pagesID = new std ::string[userCount];
         for (int i = 0; i < userCount; i++)
         {
             file >> reader;
@@ -133,7 +134,7 @@ namespace dHeader
             file >> reader;
             while (reader != "-1")
             {
-                pages[pagesIdx] += " " + reader;
+                pagesID[pagesIdx] += " " + reader;
                 file >> reader;
             }
             nameIdx++, idIdx++, pagesIdx++, friendIdx++;
@@ -150,6 +151,7 @@ namespace dHeader
                 if (tempUser == nullptr)
                 {
                     std ::cout << "no such user exists \n";
+                    ss >> temp ;
                     continue;
                 }
                 users[i]->addFriend(tempUser);
@@ -159,7 +161,7 @@ namespace dHeader
         // addlikedpage
         for (int i = 0; i < userCount; i++)
         {
-            std ::stringstream ss(pages[i] + " -1");
+            std ::stringstream ss(pagesID[i] + " -1");
             std ::string temp;
             ss >> temp;
             while (temp != "-1")
@@ -167,7 +169,7 @@ namespace dHeader
                 Page *tempPage = getPageByID(temp);
                 if (tempPage == nullptr){
                     std ::cout << "No such page exists \n";
-                    ss>>temp;
+                    ss >> temp;
                     continue;
                 }
                 users[i]->addLikedPage(tempPage);
@@ -185,7 +187,7 @@ namespace dHeader
         file >> postCount;
         posts = new Post *[postCount];
 
-        for (int i = 0; i < postCount; i++)
+        for (int i = 0 , j = 0 ; i < postCount; i++)  // extra index j to make sure the post idx only increments when the post is itself valid (valid owner(should exist in users))
         {
             int postType;
             std::string postID;
@@ -220,9 +222,9 @@ namespace dHeader
                     continue;
                 }
                 if (postType == 2)
-                    posts[i] = new Activity(postID, description, temp, ownerUser, nullptr, activityType, activityDesc);
+                    posts[j++] = new Activity(postID, description, temp, ownerUser, nullptr, activityType, activityDesc);
                 else
-                    posts[i] = new Post(postID, description, temp, ownerUser, nullptr);
+                    posts[j++] = new Post(postID, description, temp, ownerUser, nullptr);
             }
             else
             {
@@ -233,9 +235,9 @@ namespace dHeader
                     continue;
                 }
                 if (postType == 2)
-                    posts[i] = new Activity(postID, description, temp, nullptr, ownerPage, activityType, activityDesc);
+                    posts[j++] = new Activity(postID, description, temp, nullptr, ownerPage, activityType, activityDesc);
                 else
-                    posts[i] = new Post(postID, description, temp, nullptr, ownerPage);
+                    posts[j++] = new Post(postID, description, temp, nullptr, ownerPage);
             }
             // now reading users and pages which liked the post
             std ::string likers;
@@ -284,6 +286,29 @@ namespace dHeader
             continue;
         }
         post->addComment(comment);
+    }
+
+    }       
+    void socialNetworkApp ::  viewHome(){
+          std :: cout << currentUser->getName() << "-Home Page \n" ;
+        std :: cout << std :: setw(100) << "" << std :: setfill('-') << std :: setfill(' ') << "\n";
+        for(int i = 0 ; i < postCount ;i++){
+            posts[i]->display() ;
+        }
+    }
+    void socialNetworkApp :: viewProfile(){
+        std :: cout << currentUser->getName() << "-Time Line \n" ;
+        Post** tempPosts = currentUser->getMyPosts() ;
+        for(int i = 0 ; i < currentUser->getPostCount() ;i++){
+            tempPosts[i]->display(); 
+        }
+    }
+    void socialNetworkApp :: viewFriendList(){
+        std :: cout << currentUser->getName() << "-Friend List \n" ;
+        User** tempFriends = currentUser->getFriends() ;
+        for(int i = 0 ; i < currentUser->getFriendCount() ;i++){
+            std :: cout << "ID : " <<  tempFriends[i]->getID() << " Name : " << tempFriends[i]->getName() << std :: endl  ;
+        }
     }
 
 }

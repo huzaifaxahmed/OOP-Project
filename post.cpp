@@ -147,12 +147,15 @@ void Post ::removeComment(Comment *c)
         commentCount--;
     }
 
-void Post ::view()
+void Post ::display()
     {
         if (ownerPage == nullptr)
             std ::cout << "--" << ownerUser->getName() << " shared : " << description << std ::endl;
         else
             std ::cout << "--" << ownerPage->getTitle() << " shared : " << description << std ::endl;
+        for(int i = 0 ; i < commentCount ;i++){
+            comments[i]->view() ;
+        }
     }
 std ::string Post ::getID() { return ID; }
 std ::string Post ::getDesc() { return description; }
