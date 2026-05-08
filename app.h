@@ -14,7 +14,7 @@ namespace dHeader
         int userCount, pagesCount, postCount;
 
     public:
-        socialNetworkApp();
+        socialNetworkApp(int day, int month , int year);
         ~socialNetworkApp();
         void setCurrentUser();
         void readUser(std ::istream &file);

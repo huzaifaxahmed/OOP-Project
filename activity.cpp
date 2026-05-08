@@ -20,7 +20,7 @@ void Activity::display()
         cout << " is feeling " << value << endl;
         break;
     case 2:
-        cout << " id thinking about " << value << endl;
+        cout << " is thinking about " << value << endl;
         break;
     case 3:
         cout << " is making " << value << endl;

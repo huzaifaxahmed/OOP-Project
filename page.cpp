@@ -43,7 +43,7 @@ void Page ::addPost(Post *p)
     std ::cout << "Post successfully added \n";
 }
 void Page :: display(){
-    std :: cout << "ID : " << ID << "Title : " << title << std :: endl ;
+    std :: cout <<"Page \n"<< "ID : " << ID << "Title : " << title << std :: endl ;
 }
 void Page ::removePost(Post *p)
 {

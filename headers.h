@@ -51,6 +51,10 @@ namespace dHeader
         User **getFriends();
         Page **getLikedPages();
         Post **getMyPosts();
+        void setFriendCount(int count) {friendCount = count ;}
+        void setLikedPagesCount(int count ) { likedPagesCount = count ;}
+        void setPostCount(int count) {postCount = count ;}
+        void increasePostCount(){postCount++;}
         int getFriendCount();
         int getLikedPagesCount();
         int getPostCount();
@@ -83,6 +87,8 @@ namespace dHeader
         virtual void display();
         std ::string getID();
         std ::string getDesc();
+        void increasePageLikedCount(){pageLikeCount++ ;}
+        void increaseUserLikedCount(){likedCount++ ;}
         Date getDate();
     };
 
@@ -116,6 +122,7 @@ namespace dHeader
         void removePost(Post *p);
         std::string getID();
         std::string getTitle();
+        void increasePostCount(){postCount++ ;}
         Post **getPosts();
         int getPostCount();
         void display() ;
@@ -147,13 +154,5 @@ namespace dHeader
         void display() override;
     };
 
-    class socialNetworkApp
-    {
-        void viewHome();
-        void likePost();
-        void viewProfile();
-        void viewFriendList();
-
-    }; // this class will serve the purpose of a driver program with the starting point socialNetworkApp :: run()
 
 }

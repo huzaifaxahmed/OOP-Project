@@ -19,7 +19,7 @@ void Memory::display(){
     if (!description.empty())
         cout << "\"" << description << "\"" << endl;
     int years = original->getDate().yearsAgo(shareDate);
-    cout<<"("<<years<<" Years Ago"<<endl;
+    cout<<"("<<years<<" Years Ago)"<<endl;
     cout<<"----"<<endl;
     original->display();
     for (int i = 0; i < commentCount; i++)

@@ -7,12 +7,13 @@
 #include <iomanip>
 namespace dHeader
 {
-    socialNetworkApp::socialNetworkApp()
+    socialNetworkApp::socialNetworkApp(int day , int month , int year ) : currentDate(day,month,year)
     {
         users = nullptr;
         pages = nullptr;
         posts = nullptr;
         currentUser = nullptr;
+        memories = nullptr ;
         userCount = 0;
         pagesCount = 0;
         postCount = 0;
@@ -40,6 +41,7 @@ namespace dHeader
         std ::cout << "Here are your options \n";
         for (int i = 0; i < userCount; i++)
             users[i]->display();
+        std :: cin.ignore();
         getline(std ::cin, user);
         // now loop through the users to find the user and then set him as the owner
         int idx = -1;
@@ -88,6 +90,9 @@ namespace dHeader
 
     void socialNetworkApp::readPages(std::istream &file)
     {
+        if(!file){
+            std :: cout << "Error in opening pages.txt\n" ;
+        }
         int count;
         file >> count;
         pages = new Page *[count];
@@ -103,6 +108,10 @@ namespace dHeader
 
     void socialNetworkApp ::readUser(std ::istream &file)
     {
+        if(!file){
+            std :: cout << "Error in opening users.txt\n" ;
+            return ;
+        }
         std ::string *userNames;
         std::string *userID;
         std::string *friends;
@@ -142,6 +151,7 @@ namespace dHeader
             nameIdx++, idIdx++, pagesIdx++, friendIdx++;
         }
         // addfriend
+        int count = 0 ;
         for (int i = 0; i < userCount; i++)
         {
             std ::stringstream ss(friends[i] + " -1");
@@ -158,11 +168,15 @@ namespace dHeader
                 }
                 users[i]->addFriend(tempUser);
                 ss >> temp;
+                count++ ;
             }
+            users[i]->setFriendCount(count) ;
         }
+
         // addlikedpage
         for (int i = 0; i < userCount; i++)
         {
+            count =  0;
             std ::stringstream ss(pagesID[i] + " -1");
             std ::string temp;
             ss >> temp;
@@ -177,7 +191,9 @@ namespace dHeader
                 }
                 users[i]->addLikedPage(tempPage);
                 ss >> temp;
+                count++ ;
             }
+            users[i]->setLikedPagesCount(count) ;
         }
         delete[] userNames;
         delete[] userID;
@@ -187,10 +203,14 @@ namespace dHeader
 
     void socialNetworkApp::readPosts(std::istream &file)
     {
+        if(!file){
+            std :: cout << "Error in opening posts.txt\n" ; 
+        }
         file >> postCount;
         posts = new Post *[postCount];
 
-        for (int i = 0, j = 0; i < postCount; i++) // extra index j to make sure the post idx only increments when the post is itself valid (valid owner(should exist in users))
+        int j  = 0 ;  // keeps track of valid posts 
+        for (int i = 0 ; i < postCount; i++) 
         {
             int postType;
             std::string postID;
@@ -230,13 +250,14 @@ namespace dHeader
                     posts[j++] = new Post(postID, description, temp, ownerUser, nullptr);
 
                 ownerUser->addPost(posts[j - 1]);
+                ownerUser->increasePostCount() ;
             }
             else
             {
                 Page *ownerPage = getPageByID(owner);
                 if (ownerPage == nullptr)
                 {
-                    std ::cout << "Faulty owner no such user exits \n";
+                    std ::cout << "Faulty owner no such page exits \n";
                     continue;
                 }
                 if (postType == 2)
@@ -245,6 +266,7 @@ namespace dHeader
                     posts[j++] = new Post(postID, description, temp, nullptr, ownerPage);
 
                 ownerPage->addPost(posts[j - 1]);
+                ownerPage->increasePostCount() ;
             }
             // now reading users and pages which liked the post
             std ::string likers;
@@ -254,19 +276,33 @@ namespace dHeader
                 if (likers[0] == 'p')
                 {
                     Page *temp = getPageByID(likers);
+                    if(temp == nullptr){
+                        std :: cout << "Invalid ID \n";
+                        continue ;
+                    }
                     posts[j - 1]->addLike(temp);
+                    posts[j-1]->increasePageLikedCount() ;
                 }
                 else
                 {
                     User *temp = getUserByID(likers);
+                    if(temp == nullptr){
+                        std :: cout << "Invalid ID \n" ;
+                        continue ;
+                    }
                     posts[j - 1]->addLike(temp);
+                    posts[j-1]->increaseUserLikedCount() ;
                 }
                 file >> likers;
             }
         }
+        postCount = j ;
     }
     void socialNetworkApp::readComments(std::istream &file)
     {
+        if(!file){
+            std :: cout << "Error in opening file\n" ;
+        }
         int count;
         file >> count;
 
@@ -438,7 +474,7 @@ namespace dHeader
 
     void socialNetworkApp::viewHome()
     {
-        std::cout << currentUser->getName() << "Home Page\n";
+        std::cout << currentUser->getName() << "  Home Page\n";
         // Friends' posts
         for (int i = 0; i < currentUser->getFriendCount(); i++)
         {
@@ -498,10 +534,10 @@ namespace dHeader
 
     void socialNetworkApp::readData()
     {
-        std::ifstream pagesFile("Pages.txt");
-        std::ifstream usersFile("Users.txt");
-        std::ifstream postsFile("Posts.txt");
-        std::ifstream commentsFile("Comments.txt");
+        std::ifstream pagesFile("pages.txt");
+        std::ifstream usersFile("users.txt");
+        std::ifstream postsFile("posts.txt");
+        std::ifstream commentsFile("comments.txt");
         readPages(pagesFile);
         readUser(usersFile);
         readPosts(postsFile);
