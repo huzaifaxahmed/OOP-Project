@@ -6,6 +6,30 @@
 #include <sstream>
 namespace dHeader
 {
+    socialNetworkApp::socialNetworkApp(){
+        users = nullptr;
+        pages = nullptr;
+        posts = nullptr;
+        currentUser = nullptr;
+        userCount = 0;
+        pagesCount = 0;
+        postCount = 0;
+    }
+
+    socialNetworkApp::~socialNetworkApp(){
+        for(int i = 0; i < userCount; i++)
+            delete users[i];
+        delete[] users;
+    
+        for(int i = 0; i < pagesCount; i++)
+            delete pages[i];
+        delete[] pages;
+    
+        for(int i = 0; i < postCount; i++)
+            delete posts[i];
+        delete[] posts;
+    }
+
     void socialNetworkApp ::setCurrentUser()
     {
         std ::string user;
@@ -141,9 +165,11 @@ namespace dHeader
             while (temp != "-1")
             {
                 Page *tempPage = getPageByID(temp);
-                if (tempPage == nullptr)
+                if (tempPage == nullptr){
                     std ::cout << "No such page exists \n";
-                continue;
+                    ss>>temp;
+                    continue;
+                }
                 users[i]->addLikedPage(tempPage);
                 ss >> temp;
             }
@@ -153,6 +179,7 @@ namespace dHeader
         delete[] friends;
         delete[] pages;
     }
+
     void socialNetworkApp::readPosts(std::istream &file)
     {
         file >> postCount;
@@ -229,6 +256,36 @@ namespace dHeader
             }
         }
     }
+    void socialNetworkApp::readComments(std::istream& file){
+    int count;
+    file >> count;
+    
+    for(int i = 0; i < count; i++){
+        std::string commentID, postID, commenterID;
+        std::string text;
+        
+        file >> commentID >> postID >> commenterID;
+        std::getline(file >> std::ws, text);
+        Post *post = getPostByID(postID);
+        User *commenterUser = nullptr;
+        Page *commenterPage = nullptr;
+
+        if (commenterID[0]=='u')
+            commenterUser = getUserByID(commenterID);
+        else
+            commenterPage = getPageByID(commenterID);
+
+        Comment *comment = new Comment(commenterUser, commenterPage, text);
+
+
+        if(post == nullptr){
+            std::cout << "Post not found\n";
+            delete comment;
+            continue;
+        }
+        post->addComment(comment);
+    }
+
 }
 
 int main() {}

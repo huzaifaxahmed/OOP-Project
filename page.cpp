@@ -6,6 +6,17 @@ using namespace dHeader;
     std ::string Page ::getID() { return ID; }
     int Page ::getPostCount() { return postCount; }
     Post **Page ::getPosts() { return Posts; }
+
+    Page::Page(std::string id, std::string title){
+        this->ID = id;
+        this->title = title;
+        Posts = nullptr;
+        postCount = 0;
+        totalLiked = 0;
+    }
+    Page::~Page(){
+        delete[] Posts;
+    }
     void Page ::addPost(Post *p)
     {
         // first check if the post is already in the posts array or not
