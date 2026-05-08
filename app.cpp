@@ -287,7 +287,141 @@ namespace dHeader
         }
         post->addComment(comment);
     }
+}
+    void socialNetworkApp::viewPage(){
+        std::string id;
+        std::cout<<"Enter Page ID: ";
+        std::cin>>id;
+        Page* p=getPageByID(id);
+        if(p == nullptr){
+            std::cout << "Page not found!\n";
+            return;
+        }
+        std::cout << p->getTitle() << std::endl;
+        for(int i = 0; i < p->getPostCount(); i++){
+            p->getPosts()[i]->display();
+        }
+    }
+    
 
+    void socialNetworkApp::viewPost(){
+        std::string id;
+        std::cout << "Enter post ID: ";
+        std::cin >> id;
+        Post* p = getPostByID(id);
+        try{
+            if(p == nullptr)
+                throw std::string("Post not found!");
+            p->display();
+        }
+        catch(std::string e){
+            std::cout << "Error: " << e << std::endl;
+        }
+    }
+    void socialNetworkApp::likeAPost(){
+        std::string id;
+        std::cout << "Enter post ID: ";
+        std::cin >> id;
+    
+        if(currentUser == nullptr){
+            std::cout << "No current user set!\n";
+            return;
+        }
+        Post* p = getPostByID(id);
+        if(p == nullptr){
+            std::cout << "Post not found!\n";
+            return;
+        }
+        p->addLike(currentUser);
+    }
+
+    void socialNetworkApp::commentOnAPost(){
+        std::string id, text;
+        std::cout << "Enter post ID: ";
+        std::cin >> id;
+        std::cout << "Enter comment: ";
+        std::cin.ignore();
+        std::getline(std::cin, text);
+    
+    if(currentUser == nullptr){
+        std::cout << "No current user set!\n";
+        return;
+    }
+    Post* p = getPostByID(id);
+    if(p == nullptr){
+        std::cout << "Post not found!\n";
+        return;
+    }
+    Comment* c = new Comment(currentUser, nullptr, text);
+        p->addComment(c);
+    }
+
+    void socialNetworkApp::shareMemory(){
+        std::string postID, text;
+        std::cout << "Enter post ID: ";
+        std::cin >> postID;
+        std::cout << "Enter text: ";
+        std::cin.ignore();
+        std::getline(std::cin, text);
+    
+        if(currentUser == nullptr){
+            std::cout << "No current user set!\n";
+            return;
+        }
+        Post* original = getPostByID(postID);
+        if(original == nullptr){
+            std::cout << "Post not found!\n";
+            return;
+        }
+        Memory* m = new Memory("m" + std::to_string(postCount+1), text, currentDate, currentUser, nullptr, original);
+        currentUser->addPost(m);
+        posts[postCount] = m;
+        postCount++;
+        std::cout << "Memory shared successfully!\n";
+    }
+
+    void socialNetworkApp::viewMemories(){
+    if(currentUser == nullptr){
+        std::cout << "No current user set!\n";
+        return;
+    }
+    std::cout << "We hope you enjoy looking back at your memories!\n";
+    bool found = false;
+    for(int i = 0; i < currentUser->getPostCount(); i++){
+        Post* p = currentUser->getMyPosts()[i];
+        Date postDate = p->getDate();
+        if(postDate.isSameDay(currentDate) && postDate.yearsAgo(currentDate) > 0){
+            int years = postDate.yearsAgo(currentDate);
+            std::cout << years << " Years Ago\n";
+            p->display();
+            found = true;
+        }
+    }
+    if(!found)
+        std::cout << "No memories for today!\n";
+    }
+
+        void socialNetworkApp ::  viewHome(){
+          std :: cout << currentUser->getName() << "-Home Page \n" ;
+        std :: cout << std :: setw(100) << "" << std :: setfill('-') << std :: setfill(' ') << "\n";
+        for(int i = 0 ; i < postCount ;i++){
+            posts[i]->display() ;
+        }
+    }
+    void socialNetworkApp :: viewProfile(){
+        std :: cout << currentUser->getName() << "-Time Line \n" ;
+        Post** tempPosts = currentUser->getMyPosts() ;
+        for(int i = 0 ; i < currentUser->getPostCount() ;i++){
+            tempPosts[i]->display(); 
+        }
+    }
+    void socialNetworkApp :: viewFriendList(){
+        std :: cout << currentUser->getName() << "-Friend List \n" ;
+        User** tempFriends = currentUser->getFriends() ;
+        for(int i = 0 ; i < currentUser->getFriendCount() ;i++){
+            std :: cout << "ID : " <<  tempFriends[i]->getID() << " Name : " << tempFriends[i]->getName() << std :: endl  ;
+        }
+    }
 }
 
 int main() {}
